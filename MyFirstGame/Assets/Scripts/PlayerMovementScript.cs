@@ -5,7 +5,6 @@ using UnityEngine;
 public class PlayerMovementScript : MonoBehaviour
 {
 
-
     public CharacterController controller;
     public float speed = 12f;
 

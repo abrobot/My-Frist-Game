@@ -50,7 +50,6 @@ public class GunScript : MonoBehaviour
     void Shoot()
     {
         Ray ray = playerCamera.ScreenPointToRay(Input.mousePosition);
-
         gunshot.pitch = Random.Range(0.95f, 1.05f);
         gunshot.Play();
         
