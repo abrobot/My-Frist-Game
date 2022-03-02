@@ -3,23 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Ai : MonoBehaviour
+public class AI : MonoBehaviour
 {
     [SerializeField] private Transform Target;
-    private  NavMeshAgent navMeshAgent;
-    private void Awake() {
-        //navMeshAgent = GetComponent<NavMeshAgent>();
-    } 
 
 
+    // Update is called once per frame
     void Update()
     {
         Transform[] children = GetComponentsInChildren<Transform>();
         foreach (Transform child in transform)
         {
-            navMeshAgent = child.gameObject.GetComponent<NavMeshAgent>();
-            Debug.Log(child.gameObject.GetComponent<NavMeshAgent>());
-            navMeshAgent.destination = Target.position;
+            Enemy enemy = child.gameObject.GetComponent<Enemy>();
+            if (enemy.Health != 0)
+            {
+                NavMeshAgent navMeshAgent = child.gameObject.GetComponent<NavMeshAgent>();
+                navMeshAgent.destination = Target.position;
+            }
         }
+
     }
 }
