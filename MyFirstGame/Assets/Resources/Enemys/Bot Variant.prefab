@@ -228,5 +228,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e8e642cfbc69af42aa477b3e67e8d6c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyPrefab: {fileID: 5619527079697808232}
   Health: 50
   deathSound: {fileID: 2773931041564874891}

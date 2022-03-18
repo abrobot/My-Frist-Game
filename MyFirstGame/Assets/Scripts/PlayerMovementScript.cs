@@ -20,7 +20,7 @@ public class PlayerMovementScript : MonoBehaviour
     Vector3 playerGravity;
 
     void Update()
-    {
+    {   
         float gravity = -9.81f * gravityMultiplier;
 
         isGrounded = Physics.CheckSphere(groundCheck.position, .3f, layerMask);
@@ -49,6 +49,7 @@ public class PlayerMovementScript : MonoBehaviour
 
         playerGravity.y += gravity * Time.deltaTime;
         controller.Move(playerGravity * Time.deltaTime);
+
     }
 
 }

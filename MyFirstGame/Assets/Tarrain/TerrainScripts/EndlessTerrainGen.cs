@@ -1,5 +1,9 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
+using Unity.AI;
+using Unity.AI.Navigation;
 
 public class EndlessTerrainGen : MonoBehaviour
 {
@@ -20,13 +24,15 @@ public class EndlessTerrainGen : MonoBehaviour
 
     Vector2 viewerChunkPos;
 
-
+    NavMeshSurface navMeshSurface;
+    AsyncOperation asyncOperation;
 
 
     public TerrainTypeSettings BaseTerrainTypeSettings;
 
 
     void UpdateTerrainChunks() {
+        bool changed = false;
         for (int y = -viewDistance; y <= viewDistance; y += chunkSize) {
             for (int x = -viewDistance; x <= viewDistance; x += chunkSize) {
                 Vector2 chunkPos = new Vector2(viewerChunkPos.x + x, viewerChunkPos.y + y);
@@ -35,7 +41,18 @@ public class EndlessTerrainGen : MonoBehaviour
                 } else {
                     TerrainChunkConstructionData terrainChunkConstructionData = new TerrainChunkConstructionData(new EndlessTerrainGeneratorSettings(chunkSize, sampleGap),BaseTerrainTypeSettings, chunkPos);
                     terrainChunks.Add(chunkPos, new TerrainChunk(terrainChunkConstructionData, DefaultMaterial));
+                    changed = true;
                 }
+            }
+        }
+
+        if (changed) {
+            if (asyncOperation != null) {
+                if (asyncOperation.isDone) {
+                    navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
+                }
+            } else {
+                navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
             }
         }
     }
@@ -52,6 +69,11 @@ public class EndlessTerrainGen : MonoBehaviour
         terrainStorageGameObject = CustomGameObject.MakeGameObject("Terrain");
         terrainChunkStorageGameObject = CustomGameObject.MakeGameObject("Chunks", default, terrainStorageGameObject);
         treesStorageGameobject = CustomGameObject.MakeGameObject("Trees", default, terrainStorageGameObject);
+
+        navMeshSurface = terrainChunkStorageGameObject.AddComponent<NavMeshSurface>();
+        navMeshSurface.collectObjects = CollectObjects.Children;
+        navMeshSurface.BuildNavMesh();
+        Enemy.navMeshData = navMeshSurface.navMeshData;
 
         TerrainChunk.terrainChunkStorageGameObject = terrainChunkStorageGameObject;
         TerrainEnvironmentGenerater.treesStorageGameobject =  treesStorageGameobject;
