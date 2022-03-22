@@ -31,8 +31,8 @@ using UnityEngine;
 
 public class GunScript : MonoBehaviour
 {
-
-    public Camera playerCamera;
+    public GameObject owner;
+    public Camera ownerCamera;
     [SerializeField] LayerMask layerMask;
     [SerializeField] AudioSource gunshot;
 
@@ -49,7 +49,7 @@ public class GunScript : MonoBehaviour
 
     void Shoot()
     {
-        Ray ray = playerCamera.ScreenPointToRay(Input.mousePosition);
+        Ray ray = ownerCamera.ScreenPointToRay(Input.mousePosition);
         gunshot.pitch = Random.Range(0.95f, 1.05f);
         gunshot.Play();
         
@@ -58,7 +58,7 @@ public class GunScript : MonoBehaviour
             Enemy enemy = raycastHit.transform.GetComponent<Enemy>();
             if (enemy)
             {
-                enemy.takeDamage(10f);
+                enemy.takeDamage(10f, owner);
             }
         }
     }

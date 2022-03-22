@@ -10,32 +10,32 @@ using Unity.AI.Navigation;
 public class Difficulty : MonoBehaviour
 {
     static int DifficultyPoints;
-
+    public GameObject player;
 
     void Awake() {
-        DifficultyPoints = 200;
-        print(34);
-        ActivateDifficulty.Activate();
+        DifficultyPoints = 500;
+        StartCoroutine(DifficultyPointsGenerator());
+        StartCoroutine(Activate(player));
+
+    }
+
+     public static IEnumerator  Activate(GameObject player) {
+        while (true) {
+            for (int i = 0; DifficultyPoints >= 100; i++) {
+                int pointsConsumed = Enemy.SpawnRandomEnemy(player);
+                DifficultyPoints -= pointsConsumed;
+            }
+            yield return new WaitForSeconds(1);
+        }
     }
 
 
-    static class ActivateDifficulty 
-    {
-        static Dictionary<string, System.Func<int>> ConsumeDifficultyOptionsMethods = new Dictionary<string, System.Func<int>>();
-        static List<string> ConsumeDifficultyOptionsMethodsKeys;
-
-
-        static public void Activate() {
-            print(13);
-            ConsumeDifficultyOptionsMethods.Add("SpawnEnemy",  Enemy.SpawnRandomEnemy);
-            ConsumeDifficultyOptionsMethodsKeys = new List<string>(ConsumeDifficultyOptionsMethods.Keys);
-
-            for (int i = 0; DifficultyPoints > 0; i++) {
-                int randomSelectionNumber = Random.Range(0, ConsumeDifficultyOptionsMethodsKeys.Count);
-                string selection = ConsumeDifficultyOptionsMethodsKeys[randomSelectionNumber];
-                int pointsConsumed = ConsumeDifficultyOptionsMethods[selection]();
-                DifficultyPoints -= pointsConsumed;
-            }
+    
+    public static IEnumerator DifficultyPointsGenerator() {
+        while (true) {
+            yield return new WaitForSeconds(Random.Range(10,20));
+            //DifficultyPoints += Random.Range(400, 600);
+            DifficultyPoints += Random.Range(0, 0);
         }
     }
 }

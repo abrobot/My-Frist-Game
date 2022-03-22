@@ -1,26 +1,56 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using System;
+using UnityEngine.UI;
 
 
 public class PlayerStatus : MonoBehaviour
 {
+    int score = 0;
     [SerializeField] public float health = 100f;
     [SerializeField] public bool alive = true;
     private float lastPlayerHit = 0f;
+
+    public TextMeshProUGUI TimeTextUiElement;
+    public TextMeshProUGUI ScoreTextUiElement;
+
+    public GameObject GameOverText;
+
+    public GameObject healthBar;
+    [NonSerialized] public Slider healthBarSlider;
+
+    public GameTimer Timer;
+
+
+    void Start(){
+        Timer = new GameTimer();
+        Timer.TextElement = TimeTextUiElement;
+        Timer.StartTimer();
+
+        healthBarSlider = healthBar.GetComponent<Slider>();
+    }
 
     public void takeDamage(float amount)
     {
         if (alive)
         {
             health -= amount;
-            print("Player health is " + health);
+            healthBarSlider.value = health;
             if (health <= 0f)
             {
                 Debug.Log("Player is dead");
                 alive = false;
+                GameOverText.SetActive(true);
             }
         }
+    }
+
+    public void AddScore(int score) {
+
+        this.score += score;
+        ScoreTextUiElement.text = this.score.ToString();
     }
 
     void OnControllerColliderHit(ControllerColliderHit hit)

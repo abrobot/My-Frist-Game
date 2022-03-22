@@ -6,34 +6,63 @@ using Unity.AI;
 using Unity.AI.Navigation;
 using UnityEditor;
 
-public class Enemy : MonoBehaviour
+public abstract class Enemy : MonoBehaviour
 {
+    [SerializeField] public GameObject enemyPrefab;
+
     static public GameObject enemyStorageFolder;
     static List<GameObject> enemyCollection;
 
     public static NavMeshData navMeshData;
+    public NavMeshAgent navMeshAgent;
 
-    [SerializeField] public GameObject enemyPrefab;
+    public Rigidbody rigidbody;
 
-    [SerializeField] public float Health = 50f;
-    [SerializeField] AudioSource deathSound;
+
+    public bool behaviorActive = false;
+    public IEnumerator behaviorCoroutine;
+
+    public bool alive = true;
+    public GameObject target;
+
+    public int killScoreValue;
+    public float health;
+    public AudioSource deathSound;
+
+
 
     static Enemy() {
         Enemy.enemyCollection = new List<GameObject>();
     }
 
+    public abstract IEnumerator ActivateBehavior();
 
-    public void takeDamage(float amount)
+    public void MoveTo(Vector3 position)
     {
-        Health -= amount;
-        if (Health <= 0)
+        if (alive == true && navMeshAgent.enabled == true)
+            {
+                navMeshAgent.destination = position;
+
+            }
+    }
+
+
+    public void takeDamage(float amount, GameObject Player)
+    {
+        health -= amount;
+        if (health <= 0)
         {
+            alive = false;
+            StopCoroutine(behaviorCoroutine);
+            print(behaviorCoroutine.Current);
+            print("coro stoped");
+            Player.GetComponent<PlayerStatus>().AddScore(killScoreValue);
             deathSound.Play();
             Destroy(gameObject);
         }
     }
         
-    public static  int SpawnRandomEnemy(){
+    public static  int SpawnRandomEnemy(GameObject player){
         if (enemyStorageFolder == null) {
             Enemy.enemyStorageFolder = GameObject.Find("BotsFolder");
             if (enemyStorageFolder == null) {
@@ -43,20 +72,26 @@ public class Enemy : MonoBehaviour
         }
 
         GameObject enemy = selectRandomEnemyType();
-        GameScript.coroutineHandler.callCoroutine(Spawn(enemy));
+        GameScript.coroutineHandler.callCoroutine(Spawn(enemy, player));
         return 100;
     }
 
 
-    public static IEnumerator Spawn(GameObject enemy) {
-        print("spawn");
+    public static IEnumerator Spawn(GameObject enemy, GameObject player) {
         while (Enemy.navMeshData == null)
         {
-            print(111);
                 yield return new WaitForSeconds(.1f);
         }
-        print(enemyStorageFolder);
-        GameObject newEnemy = Object.Instantiate(GameObject.CreatePrimitive(PrimitiveType.Plane), new Vector3(30, 0, 0), Quaternion.identity, enemyStorageFolder.transform);
+        while (Enemy.navMeshData.sourceBounds.size.x <= 0f && Enemy.navMeshData.sourceBounds.size.z <= 0)
+        {
+                yield return new WaitForSeconds(.1f);
+        }
+
+        float x = Random.Range(-50, 50);
+        float z = Random.Range(-50, 50);
+
+        Vector3 randomEnemyPosition = player.transform.position + new Vector3(x,2,z);
+        GameObject newEnemy = Object.Instantiate(enemy, randomEnemyPosition, Quaternion.identity, enemyStorageFolder.transform);
     }
 
 
@@ -75,11 +110,7 @@ public class Enemy : MonoBehaviour
 
         List<GameObject> enemys = new List<GameObject>();
         foreach ( GameObject enemy in data) {
-            if (PrefabUtility.GetPrefabAssetType(enemy) !=  PrefabAssetType.NotAPrefab) {
                 enemys.Add(enemy);
-            } else {
-                Debug.Log(enemy.name + " is not a enemy");
-            }
         }
         Enemy.enemyCollection = enemys;
     }

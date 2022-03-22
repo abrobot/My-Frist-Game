@@ -5,7 +5,7 @@ using UnityEngine.AI;
 
 public class AI : MonoBehaviour
 {
-    [SerializeField] private Transform Target;
+    [SerializeField] private GameObject target;
 
 
     // Update is called once per frame
@@ -15,12 +15,12 @@ public class AI : MonoBehaviour
         foreach (Transform child in transform)
         {
             Enemy enemy = child.gameObject.GetComponent<Enemy>();
-            if (enemy.Health != 0)
+            if (enemy.behaviorActive != true)
             {
-                NavMeshAgent navMeshAgent = child.gameObject.GetComponent<NavMeshAgent>();
-                navMeshAgent.destination = Target.position;
+                enemy.target = target;
+                enemy.behaviorCoroutine = enemy.ActivateBehavior();
+                StartCoroutine(enemy.behaviorCoroutine);
             }
         }
-
     }
 }
