@@ -16,11 +16,11 @@ public abstract class Enemy : MonoBehaviour
     public static NavMeshData navMeshData;
     public NavMeshAgent navMeshAgent;
 
-    public Rigidbody rigidbody;
+    public Rigidbody rigidBody;
 
 
     public bool behaviorActive = false;
-    public IEnumerator behaviorCoroutine;
+    public Coroutine behaviorCoroutine;
 
     public bool alive = true;
     public GameObject target;
@@ -52,17 +52,18 @@ public abstract class Enemy : MonoBehaviour
         health -= amount;
         if (health <= 0)
         {
-            alive = false;
             StopCoroutine(behaviorCoroutine);
-            print(behaviorCoroutine.Current);
-            print("coro stoped");
+            alive = false;
             Player.GetComponent<PlayerStatus>().AddScore(killScoreValue);
             deathSound.Play();
             Destroy(gameObject);
         }
     }
+
+
+
         
-    public static  int SpawnRandomEnemy(GameObject player){
+    public static  int SpawnRandomEnemy(Vector3 position){
         if (enemyStorageFolder == null) {
             Enemy.enemyStorageFolder = GameObject.Find("BotsFolder");
             if (enemyStorageFolder == null) {
@@ -72,12 +73,12 @@ public abstract class Enemy : MonoBehaviour
         }
 
         GameObject enemy = selectRandomEnemyType();
-        GameScript.coroutineHandler.callCoroutine(Spawn(enemy, player));
+        GameScript.coroutineHandler.callCoroutine(Spawn(enemy, position));
         return 100;
     }
 
 
-    public static IEnumerator Spawn(GameObject enemy, GameObject player) {
+    public static IEnumerator Spawn(GameObject enemy, Vector3 position) {
         while (Enemy.navMeshData == null)
         {
                 yield return new WaitForSeconds(.1f);
@@ -87,10 +88,10 @@ public abstract class Enemy : MonoBehaviour
                 yield return new WaitForSeconds(.1f);
         }
 
-        float x = Random.Range(-50, 50);
-        float z = Random.Range(-50, 50);
+        float x = Random.Range(-25, 25);
+        float z = Random.Range(-25, 25);
 
-        Vector3 randomEnemyPosition = player.transform.position + new Vector3(x,2,z);
+        Vector3 randomEnemyPosition = position + new Vector3(x,2,z);
         GameObject newEnemy = Object.Instantiate(enemy, randomEnemyPosition, Quaternion.identity, enemyStorageFolder.transform);
     }
 

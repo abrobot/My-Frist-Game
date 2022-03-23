@@ -18,8 +18,7 @@ public class AI : MonoBehaviour
             if (enemy.behaviorActive != true)
             {
                 enemy.target = target;
-                enemy.behaviorCoroutine = enemy.ActivateBehavior();
-                StartCoroutine(enemy.behaviorCoroutine);
+                enemy.behaviorCoroutine = enemy.StartCoroutine(enemy.ActivateBehavior());
             }
         }
     }

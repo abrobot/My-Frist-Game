@@ -43,6 +43,7 @@ public class PlayerStatus : MonoBehaviour
                 Debug.Log("Player is dead");
                 alive = false;
                 GameOverText.SetActive(true);
+                Timer.Stop();
             }
         }
     }
