@@ -73,12 +73,16 @@ public abstract class Enemy : MonoBehaviour
         }
 
         GameObject enemy = selectRandomEnemyType();
-        GameScript.coroutineHandler.callCoroutine(Spawn(enemy, position));
+        print(GameScript.coroutineHandler);
+        GameScript.coroutineHandler.StartCoroutine(Spawn(enemy, position));
         return 100;
     }
 
 
     public static IEnumerator Spawn(GameObject enemy, Vector3 position) {
+
+        print(enemy);
+        print(position);
         while (Enemy.navMeshData == null)
         {
                 yield return new WaitForSeconds(.1f);

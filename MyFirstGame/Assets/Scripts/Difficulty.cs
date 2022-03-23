@@ -10,13 +10,13 @@ using Unity.AI.Navigation;
 public class Difficulty : MonoBehaviour
 {
     static int DifficultyPoints;
-    static public GameObject player;
+    public GameObject player;
 
     static int GroupMaxDifficulty = 500;
     static int GroupMinDifficulty = 300;
 
     void Awake() {
-        player = gameObject;
+
 
         DifficultyPoints = 500;
         StartCoroutine(DifficultyPointsGenerator());
@@ -28,7 +28,7 @@ public class Difficulty : MonoBehaviour
         while (true) {
             for (int i = 0; DifficultyPoints >= GroupMinDifficulty; i++) {
                 EnemyGroup enemyGroup = new EnemyGroup();
-                enemyGroup.GenerateGroup();
+                enemyGroup.GenerateGroup(player);
             }
             yield return new WaitForSeconds(1);
         }
@@ -39,8 +39,8 @@ public class Difficulty : MonoBehaviour
     public static IEnumerator DifficultyPointsGenerator() {
         while (true) {
             yield return new WaitForSeconds(Random.Range(10,20));
-            DifficultyPoints += Random.Range(400, 600);
-            //DifficultyPoints += Random.Range(0, 0);
+            //DifficultyPoints += Random.Range(400, 600);
+            DifficultyPoints += Random.Range(0, 0);
         }
     }
 
@@ -54,9 +54,9 @@ public class Difficulty : MonoBehaviour
         
         Vector3 position;
 
-        public void GenerateGroup() {
+        public void GenerateGroup(GameObject player) {
             PointAvailable = CalculateAvailableDifficultyPoints();
-            position = FindAcceptablePositionForGroup();
+            position = FindAcceptablePositionForGroup(player);
             for (int i = 0; PointAvailable >= 100; i++) {
                 int pointsConsumed = Enemy.SpawnRandomEnemy(position);
                 DifficultyPoints -= pointsConsumed;
@@ -83,7 +83,7 @@ public class Difficulty : MonoBehaviour
         }
 
 
-        static Vector3 FindAcceptablePositionForGroup() {
+        static Vector3 FindAcceptablePositionForGroup(GameObject player) {
             float positionX = Random.Range(player.transform.position.x - (160 / 2), player.transform.position.x + (160 / 2));
             float positionZ = Random.Range(player.transform.position.z - (160 / 2), player.transform.position.z + (160 / 2));
 
