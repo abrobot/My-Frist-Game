@@ -12,15 +12,19 @@ public class Seed : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        int BaseSeedAsInt = BaseSeed.GetHashCode();
-        Random.InitState(BaseSeedAsInt);
-        gameSeeds.Add("MainSeed", BaseSeedAsInt);
-        GenerateNewSeed("Terrain");
-        GenerateNewSeed("Trees1");
-        GenerateNewSeed("Trees2");
+        if (gameSeeds.Count <= 0)
+        {
+            int BaseSeedAsInt = BaseSeed.GetHashCode();
+            Random.InitState(BaseSeedAsInt);
+            gameSeeds.Add("MainSeed", BaseSeedAsInt);
+            GenerateNewSeed("Terrain");
+            GenerateNewSeed("Trees1");
+            GenerateNewSeed("Trees2");
+        }
     }
 
-    void GenerateNewSeed(string name) {
+    void GenerateNewSeed(string name)
+    {
         int newSeed = Random.Range(100000, 999999);
         //print(name);
         gameSeeds.Add(name, newSeed);

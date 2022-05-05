@@ -7,19 +7,24 @@ using UnityEditor;
 static public class TerrainEnvironmentGenerater
 {
     static LayerMask layerMask;
-    static List<GameObject> trees;
+    public static List<GameObject> trees;
     public static GameObject treesStorageGameobject;
 
 
-    static public IEnumerator GenerateEnironment(TerrainChunkConstructionData terrainChunkConstructionData) {
-        if (trees == null) {
+    static public IEnumerator GenerateEnironment(TerrainChunkConstructionData terrainChunkConstructionData)
+    {
+        if (trees == null)
+        {
             trees = GetPrefabsFromFolder.Get("Trees");
         }
-        yield return null;
-        GenerateTrees(terrainChunkConstructionData); 
+
+        yield return new WaitForSeconds(.1f);
+
+        Game.coroutineHandler.StartCoroutine(GenerateTrees(terrainChunkConstructionData));
     }
 
-    static public void GenerateTrees (TerrainChunkConstructionData terrainChunkConstructionData) {
+    static public IEnumerator GenerateTrees(TerrainChunkConstructionData terrainChunkConstructionData)
+    {
         LayerMask layerMask = LayerMask.GetMask("Terrain");
         NoiseMapDataForTreePlacement generalNoiseMapSettings = terrainChunkConstructionData.treeGenerationSetting.GeneralNoiseMapSettings;
         NoiseMapDataForTreePlacement specificNoiseMapSettings = terrainChunkConstructionData.treeGenerationSetting.SpesificNoiseMapSettings;
@@ -29,24 +34,35 @@ static public class TerrainEnvironmentGenerater
         float[,] specificNoiseMap = NoiseMapGenerator.GenerateNoiseMap(new NoiseMapConstructionData(Seed.gameSeeds["Trees2"], terrainChunkConstructionData.position, terrainChunkConstructionData.chunkSize, specificNoiseMapSettings.resolution, specificNoiseMapSettings.scale, generalNoiseMapSettings.octaves, specificNoiseMapSettings.persistance, specificNoiseMapSettings.lacunarity));
 
 
-        
-        int width = generalNoiseMap.GetLength (0);
-		int height = generalNoiseMap.GetLength (1); 
+
+        int width = generalNoiseMap.GetLength(0);
+        int height = generalNoiseMap.GetLength(1);
 
 
-        for (int y = 0; y < height; y++) {
-			for (int x = 0; x < width; x++) {
+        for (int y = 0; y < height; y++)
+        {
+            for (int x = 0; x < width; x++)
+            {
 
-                if (generalNoiseMap[x, y] > .25 && specificNoiseMap[x, y] > .87) {
+                if (generalNoiseMap[x, y] > .25 && specificNoiseMap[x, y] > .87)
+                {
                     Vector3 treesPosition = new Vector3((terrainChunkConstructionData.position.x) + (x * generalNoiseMapSettings.resolution), 100, (terrainChunkConstructionData.position.y) + (y * generalNoiseMapSettings.resolution));
                     RaycastHit hit;
+                    //Debug.DrawLine(treesPosition, treesPosition - new Vector3(0, 500, 0), Color.yellow, 15f);
+                    while (true)
+                    {
 
-                    if (Physics.Raycast(treesPosition, Vector3.down, out hit, 500f, layerMask)) {
-                        treesPosition.y = hit.point.y - .2f;
-                        Object.Instantiate(trees[0], treesPosition, Quaternion.identity, treesStorageGameobject.transform);
+                        if (Physics.Raycast(treesPosition, Vector3.down, out hit, 500f, layerMask))
+                        {
+                            treesPosition.y = hit.point.y - .2f;
+                            GameObject newTree = Object.Instantiate(trees[0], treesPosition, Quaternion.identity, treesStorageGameobject.transform);
+                            newTree.name = newTree.name + "";
+                            break;
+                        }
+                        yield return null;
                     }
+                    //Debug.Log(hit.rigidbody +  "    //    " + treesPosition +  "    //    " + hit.rigidbody.transform.gameObject);
                 }
-
             }
         }
     }

@@ -39,7 +39,7 @@ public class TerrainChunk
          this.meshCollider.sharedMesh = this.mesh;
 
         
-        GameScript.coroutineHandler.callCoroutine(TerrainEnvironmentGenerater.GenerateEnironment(terrainChunkConstructionData));
+        Game.coroutineHandler.callCoroutine(TerrainEnvironmentGenerater.GenerateEnironment(terrainChunkConstructionData));
     }
 
 

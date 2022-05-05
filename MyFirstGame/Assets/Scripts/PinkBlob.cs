@@ -9,19 +9,28 @@ public class PinkBlob : Enemy
         this.health = health;
         this.deathSound = deathSound;
         this.killScoreValue = killScoreValue;
-;       
+        ;
 
     }
 
 
 
-    public override IEnumerator ActivateBehavior() {
-        
-        behaviorActive = true; 
-        while (behaviorActive == true) {
-            MoveTo(target.transform.position);
-            yield return new WaitForSeconds(.1f);
+    public override IEnumerator ActivateBehavior()
+    {
+
+        behaviorActive = true;
+ 
+        navMeshAgent.enabled = false;
+        navMeshAgent.enabled = true;
+
+        while (alive == true && target.enabled == true)
+        {
+            MoveTo(target.position);
+            yield return new WaitForSeconds(0.1f);
         }
+
+        StopMove();
         behaviorActive = false;
+        behaviorCoroutine = null;
     }
 }

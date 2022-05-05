@@ -11,49 +11,68 @@ public class BlueBlob : Enemy
         this.killScoreValue = killScoreValue;
     }
 
+
+   
+
+
     public override IEnumerator ActivateBehavior()
     {
+
+        //print("Start");
         behaviorActive = true;
-        rigidBody.isKinematic = true;
 
-        float nextJumpTime = Random.Range(10, 20);
-        float lastJumpTime = 0f;
-
+        float lastJumpTime = Time.time;
+        float nextJumpTime = Random.Range(5, 6);
 
 
-        while (alive == true)
+        bool midJump = false;
+
+        navMeshAgent.enabled = false;
+        navMeshAgent.enabled = true;
+
+        while (alive == true && target.enabled ==  true)
         {
-            if (Time.time >= lastJumpTime + 2.5f)
+
+            if (Time.time >= lastJumpTime + 2.5f && midJump)
             {
                 navMeshAgent.enabled = true;
-                rigidBody.isKinematic = true;
-                rigidBody.useGravity = false;
-            }
-            MoveTo(target.transform.position);
-
-            if (Time.time >= lastJumpTime + nextJumpTime)
-            {
-                Lunge();
                 lastJumpTime = Time.time;
-                nextJumpTime = Random.Range(5, 10);
+                nextJumpTime = Random.Range(5, 6);
+
+                midJump = false;
             }
 
-            yield return new WaitForSeconds(.1f);
+            MoveTo(target.position);
+
+            if (Time.time >= lastJumpTime + nextJumpTime && !midJump)
+            {
+                midJump = true;
+                Lunge();
+
+            }
+            yield return new WaitForSeconds(0.1f);
         }
+
+        StopMove();
+        navMeshAgent.enabled = true;
+        rigidBody.isKinematic = true;
+        rigidBody.useGravity = false;
+       
         behaviorActive = false;
+        behaviorCoroutine = null;
     }
 
 
     public void Lunge()
     {
         if (gameObject)
-        {
+        {   
+            StopMove();
             navMeshAgent.enabled = false;
             rigidBody.isKinematic = false;
             rigidBody.useGravity = true;
             rigidBody.velocity += transform.forward * 60;
             rigidBody.velocity += transform.up * 10;
-
         }
     }
 }

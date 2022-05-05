@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.AI;
@@ -7,87 +8,88 @@ using Unity.AI;
 using Unity.AI.Navigation;
 
 
-public class Difficulty : MonoBehaviour
+public class Difficulty : OneInstance
 {
-    static int DifficultyPoints;
+    public static Difficulty instance {get; set;}
+
+    public int DifficultyPoints;
     public GameObject player;
 
-    static int GroupMaxDifficulty = 500;
-    static int GroupMinDifficulty = 300;
+    public List<EnemyGroup> enemyGroups = new List<EnemyGroup>();
 
-    void Awake() {
+    public int GroupMaxDifficulty = 500;
+    public int GroupMinDifficulty = 300;
 
+    int MaxDifficultyPointsCanGenerate = 400;
+    int MinDifficultyPointsCanGenerate = 300;
 
-        DifficultyPoints = 500;
+     int maxAmountOfGroups = 1;
+
+    void Awake()
+    {
+        if (instance) {
+            Debug.LogWarning("Did you mean to make second instance of type. Type extends OneInstance");
+        } else {
+            instance = this;
+        }
+
+        OneInstance.AddInstance(this.ToString(), this);
+
+        DifficultyPoints = 300;
+
         StartCoroutine(DifficultyPointsGenerator());
         StartCoroutine(Activate(player));
 
     }
 
-     public static IEnumerator  Activate(GameObject player) {
-        while (true) {
-            for (int i = 0; DifficultyPoints >= GroupMinDifficulty; i++) {
-                EnemyGroup enemyGroup = new EnemyGroup();
-                enemyGroup.GenerateGroup(player);
+    override public void ResetInstance() {
+        OneInstance.AllInstances[this.ToString()] =  new Difficulty();
+    }
+    
+
+    public IEnumerator Activate(GameObject player)
+    {
+        float SixtySecondsLoopTime = 0f;
+
+        while (true)
+        {
+            if (enemyGroups.Count < maxAmountOfGroups)
+            {
+                for (int i = 0; DifficultyPoints >= GroupMinDifficulty; i++)
+                {
+
+                    EnemyGroup enemyGroup = new EnemyGroup();
+                    enemyGroup.GenerateGroup(player);
+
+                    enemyGroups.Add(enemyGroup);
+                    yield return new WaitForSeconds(.1f);
+                }
             }
+
             yield return new WaitForSeconds(1);
+            SixtySecondsLoopTime += 1;
+            if (SixtySecondsLoopTime == 60f)
+            {
+                SixtySecondsLoopTime = 0f;
+                maxAmountOfGroups += 1;
+                MaxDifficultyPointsCanGenerate += 200;
+                MinDifficultyPointsCanGenerate += 100;
+            }
         }
     }
 
 
-    
-    public static IEnumerator DifficultyPointsGenerator() {
-        while (true) {
-            yield return new WaitForSeconds(Random.Range(10,20));
-            //DifficultyPoints += Random.Range(400, 600);
-            DifficultyPoints += Random.Range(0, 0);
-        }
+    public void RemoveEnemyGroup(EnemyGroup enemyGroup) {
+        enemyGroups.Remove(enemyGroup);
     }
 
-
-
-    
-    class EnemyGroup {
-
-        int numberOfEnemys;
-        int PointAvailable;
-        
-        Vector3 position;
-
-        public void GenerateGroup(GameObject player) {
-            PointAvailable = CalculateAvailableDifficultyPoints();
-            position = FindAcceptablePositionForGroup(player);
-            for (int i = 0; PointAvailable >= 100; i++) {
-                int pointsConsumed = Enemy.SpawnRandomEnemy(position);
-                DifficultyPoints -= pointsConsumed;
-            }
-        }
-
-
-        static int CalculateAvailableDifficultyPoints() {
-            bool enoughForGroup = (DifficultyPoints >= GroupMinDifficulty);
-            if (!enoughForGroup) {
-                return 0;
-            }
-
-            bool useMax = (DifficultyPoints >= GroupMaxDifficulty);
-            int PointAvailable = 0;
-
-            if (useMax) {
-                PointAvailable = GroupMaxDifficulty;
-            } else {
-                PointAvailable = DifficultyPoints;
-            }
-
-            return MyMathFuctions.RoundNum(Random.Range(GroupMinDifficulty, PointAvailable), 100);
-        }
-
-
-        static Vector3 FindAcceptablePositionForGroup(GameObject player) {
-            float positionX = Random.Range(player.transform.position.x - (160 / 2), player.transform.position.x + (160 / 2));
-            float positionZ = Random.Range(player.transform.position.z - (160 / 2), player.transform.position.z + (160 / 2));
-
-            return new Vector3(positionX, 20, positionZ);
+    public IEnumerator DifficultyPointsGenerator()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(Random.Range(25, 40));
+            DifficultyPoints += Random.Range(MinDifficultyPointsCanGenerate, MaxDifficultyPointsCanGenerate);
+            //DifficultyPoints += Random.Range(0, 0);
         }
     }
 }

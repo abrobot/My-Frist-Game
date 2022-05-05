@@ -31,34 +31,46 @@ public class EndlessTerrainGen : MonoBehaviour
     public TerrainTypeSettings BaseTerrainTypeSettings;
 
 
-    void UpdateTerrainChunks() {
+    void UpdateTerrainChunks()
+    {
         bool changed = false;
-        for (int y = -viewDistance; y <= viewDistance; y += chunkSize) {
-            for (int x = -viewDistance; x <= viewDistance; x += chunkSize) {
+        for (int y = -viewDistance; y <= viewDistance; y += chunkSize)
+        {
+            for (int x = -viewDistance; x <= viewDistance; x += chunkSize)
+            {
                 Vector2 chunkPos = new Vector2(viewerChunkPos.x + x, viewerChunkPos.y + y);
-                if (terrainChunks.ContainsKey(chunkPos)) {
-                    
-                } else {
-                    TerrainChunkConstructionData terrainChunkConstructionData = new TerrainChunkConstructionData(new EndlessTerrainGeneratorSettings(chunkSize, sampleGap),BaseTerrainTypeSettings, chunkPos);
+                if (terrainChunks.ContainsKey(chunkPos))
+                {
+
+                }
+                else
+                {
+                    TerrainChunkConstructionData terrainChunkConstructionData = new TerrainChunkConstructionData(new EndlessTerrainGeneratorSettings(chunkSize, sampleGap), BaseTerrainTypeSettings, chunkPos);
                     terrainChunks.Add(chunkPos, new TerrainChunk(terrainChunkConstructionData, DefaultMaterial));
                     changed = true;
                 }
             }
         }
 
-        if (changed) {
-            if (asyncOperation != null) {
-                if (asyncOperation.isDone) {
+        if (changed)
+        {
+            if (asyncOperation != null)
+            {
+                if (asyncOperation.isDone)
+                {
                     navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
                 }
-            } else {
+            }
+            else
+            {
                 navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
             }
         }
     }
-    
 
-    public Vector2 RoundViewerV2Pos(Vector2 viewerPos, int roundInt) {
+
+    public Vector2 RoundViewerV2Pos(Vector2 viewerPos, int roundInt)
+    {
         return new Vector2(MyMathFuctions.RoundNum(viewerPos.x, roundInt), MyMathFuctions.RoundNum(viewerPos.y, roundInt));
     }
 
@@ -76,7 +88,7 @@ public class EndlessTerrainGen : MonoBehaviour
         Enemy.navMeshData = navMeshSurface.navMeshData;
 
         TerrainChunk.terrainChunkStorageGameObject = terrainChunkStorageGameObject;
-        TerrainEnvironmentGenerater.treesStorageGameobject =  treesStorageGameobject;
+        TerrainEnvironmentGenerater.treesStorageGameobject = treesStorageGameobject;
 
     }
 
@@ -89,11 +101,13 @@ public class EndlessTerrainGen : MonoBehaviour
 }
 
 
-public class EndlessTerrainGeneratorSettings {
+public class EndlessTerrainGeneratorSettings
+{
     public int chunkSize;
     public int sampleGap;
-    
-    public EndlessTerrainGeneratorSettings(int chunkSize, int sampleGap) {
+
+    public EndlessTerrainGeneratorSettings(int chunkSize, int sampleGap)
+    {
         this.chunkSize = chunkSize;
         this.sampleGap = sampleGap;
     }

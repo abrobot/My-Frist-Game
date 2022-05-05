@@ -7,7 +7,7 @@ public class DayNightCycle
     public Status status;
     public DayNight dayNight;
     
-    public int cycleLangthSeconds = 10;
+    public int cycleLangthSeconds = 60;
     public int SecondsIntoCycle = 0;
 
     Coroutine cycleCoroutine;
@@ -16,7 +16,7 @@ public class DayNightCycle
     public event OnDayNightChange changed;
 
     public void Start() {
-        cycleCoroutine = GameScript.coroutineHandler.StartCoroutine(StartCycle());
+        cycleCoroutine = Game.coroutineHandler.StartCoroutine(StartCycle());
     }
 
     public void Pause() {
@@ -24,7 +24,7 @@ public class DayNightCycle
     }
 
     public void Kill() {
-        GameScript.coroutineHandler.StopCoroutine(cycleCoroutine);
+        Game.coroutineHandler.StopCoroutine(cycleCoroutine);
         SecondsIntoCycle = 0;
     }
 

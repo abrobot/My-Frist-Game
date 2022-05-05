@@ -4,6 +4,7 @@ using UnityEngine;
 using TMPro;
 using System;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 
 public class PlayerStatus : MonoBehaviour
@@ -15,6 +16,7 @@ public class PlayerStatus : MonoBehaviour
 
     public TextMeshProUGUI TimeTextUiElement;
     public TextMeshProUGUI ScoreTextUiElement;
+    public TextMeshProUGUI GameOverScoreTextUiElement;
 
     public GameObject GameOverText;
 
@@ -30,6 +32,7 @@ public class PlayerStatus : MonoBehaviour
         Timer.StartTimer();
 
         healthBarSlider = healthBar.GetComponent<Slider>();
+
     }
 
     public void takeDamage(float amount)
@@ -40,10 +43,11 @@ public class PlayerStatus : MonoBehaviour
             healthBarSlider.value = health;
             if (health <= 0f)
             {
-                Debug.Log("Player is dead");
                 alive = false;
                 GameOverText.SetActive(true);
+                GameOverScoreTextUiElement.gameObject.SetActive(true);
                 Timer.Stop();
+                Game.instance.Restart(); 
             }
         }
     }
@@ -52,6 +56,7 @@ public class PlayerStatus : MonoBehaviour
 
         this.score += score;
         ScoreTextUiElement.text = this.score.ToString();
+        GameOverScoreTextUiElement.text = this.score.ToString();
     }
 
     void OnControllerColliderHit(ControllerColliderHit hit)
