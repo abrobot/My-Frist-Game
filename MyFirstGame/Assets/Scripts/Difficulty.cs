@@ -23,7 +23,7 @@ public class Difficulty : OneInstance
     int MaxDifficultyPointsCanGenerate = 400;
     int MinDifficultyPointsCanGenerate = 300;
 
-     int maxAmountOfGroups = 1;
+     int maxAmountOfGroups = 0;
 
     void Awake()
     {

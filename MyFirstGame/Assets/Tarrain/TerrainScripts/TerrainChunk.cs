@@ -7,9 +7,11 @@ public class TerrainChunk
     public static GameObject terrainChunkStorageGameObject;
 
     Material material;
-    TerrainChunkConstructionData terrainChunkConstructionData;
+    public TerrainChunkConstructionData terrainChunkConstructionData;
     
-    GameObject chunkGameObject;
+    public GameObject chunkGameObject;
+    public List<GameObject> chunkTrees = new List<GameObject>();
+    
     MeshRenderer meshRenderer;
     MeshFilter meshFilter;
 
@@ -19,6 +21,8 @@ public class TerrainChunk
     float[,] noiseMap;
     MeshData meshData;
     Mesh mesh;
+
+    public bool fullyGenerated = false;
 
 
 
@@ -39,7 +43,7 @@ public class TerrainChunk
          this.meshCollider.sharedMesh = this.mesh;
 
         
-        Game.coroutineHandler.callCoroutine(TerrainEnvironmentGenerater.GenerateEnironment(terrainChunkConstructionData));
+        Game.coroutineHandler.callCoroutine(TerrainEnvironmentGenerater.GenerateEnironment(this));
     }
 
 

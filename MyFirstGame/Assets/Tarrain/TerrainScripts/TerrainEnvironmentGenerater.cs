@@ -11,7 +11,7 @@ static public class TerrainEnvironmentGenerater
     public static GameObject treesStorageGameobject;
 
 
-    static public IEnumerator GenerateEnironment(TerrainChunkConstructionData terrainChunkConstructionData)
+    static public IEnumerator GenerateEnironment(TerrainChunk terrainChunk)
     {
         if (trees == null)
         {
@@ -20,18 +20,18 @@ static public class TerrainEnvironmentGenerater
 
         yield return new WaitForSeconds(.1f);
 
-        Game.coroutineHandler.StartCoroutine(GenerateTrees(terrainChunkConstructionData));
+        Game.coroutineHandler.StartCoroutine(GenerateTrees(terrainChunk));
     }
 
-    static public IEnumerator GenerateTrees(TerrainChunkConstructionData terrainChunkConstructionData)
+    static public IEnumerator GenerateTrees(TerrainChunk terrainChunk)
     {
         LayerMask layerMask = LayerMask.GetMask("Terrain");
-        NoiseMapDataForTreePlacement generalNoiseMapSettings = terrainChunkConstructionData.treeGenerationSetting.GeneralNoiseMapSettings;
-        NoiseMapDataForTreePlacement specificNoiseMapSettings = terrainChunkConstructionData.treeGenerationSetting.SpesificNoiseMapSettings;
+        NoiseMapDataForTreePlacement generalNoiseMapSettings = terrainChunk.terrainChunkConstructionData.treeGenerationSetting.GeneralNoiseMapSettings;
+        NoiseMapDataForTreePlacement specificNoiseMapSettings = terrainChunk.terrainChunkConstructionData.treeGenerationSetting.SpesificNoiseMapSettings;
 
 
-        float[,] generalNoiseMap = NoiseMapGenerator.GenerateNoiseMap(new NoiseMapConstructionData(Seed.gameSeeds["Trees1"], terrainChunkConstructionData.position, terrainChunkConstructionData.chunkSize, generalNoiseMapSettings.resolution, generalNoiseMapSettings.scale, generalNoiseMapSettings.octaves, generalNoiseMapSettings.persistance, generalNoiseMapSettings.lacunarity));
-        float[,] specificNoiseMap = NoiseMapGenerator.GenerateNoiseMap(new NoiseMapConstructionData(Seed.gameSeeds["Trees2"], terrainChunkConstructionData.position, terrainChunkConstructionData.chunkSize, specificNoiseMapSettings.resolution, specificNoiseMapSettings.scale, generalNoiseMapSettings.octaves, specificNoiseMapSettings.persistance, specificNoiseMapSettings.lacunarity));
+        float[,] generalNoiseMap = NoiseMapGenerator.GenerateNoiseMap(new NoiseMapConstructionData(Seed.gameSeeds["Trees1"], terrainChunk.terrainChunkConstructionData.position, terrainChunk.terrainChunkConstructionData.chunkSize, generalNoiseMapSettings.resolution, generalNoiseMapSettings.scale, generalNoiseMapSettings.octaves, generalNoiseMapSettings.persistance, generalNoiseMapSettings.lacunarity));
+        float[,] specificNoiseMap = NoiseMapGenerator.GenerateNoiseMap(new NoiseMapConstructionData(Seed.gameSeeds["Trees2"], terrainChunk.terrainChunkConstructionData.position, terrainChunk.terrainChunkConstructionData.chunkSize, specificNoiseMapSettings.resolution, specificNoiseMapSettings.scale, generalNoiseMapSettings.octaves, specificNoiseMapSettings.persistance, specificNoiseMapSettings.lacunarity));
 
 
 
@@ -46,7 +46,7 @@ static public class TerrainEnvironmentGenerater
 
                 if (generalNoiseMap[x, y] > .25 && specificNoiseMap[x, y] > .87)
                 {
-                    Vector3 treesPosition = new Vector3((terrainChunkConstructionData.position.x) + (x * generalNoiseMapSettings.resolution), 100, (terrainChunkConstructionData.position.y) + (y * generalNoiseMapSettings.resolution));
+                    Vector3 treesPosition = new Vector3((terrainChunk.terrainChunkConstructionData.position.x) + (x * generalNoiseMapSettings.resolution), 100, (terrainChunk.terrainChunkConstructionData.position.y) + (y * generalNoiseMapSettings.resolution));
                     RaycastHit hit;
                     //Debug.DrawLine(treesPosition, treesPosition - new Vector3(0, 500, 0), Color.yellow, 15f);
                     while (true)
