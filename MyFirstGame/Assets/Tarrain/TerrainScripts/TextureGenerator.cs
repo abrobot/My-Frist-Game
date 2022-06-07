@@ -3,17 +3,17 @@ using System.Collections;
 
 public static class TextureGenerator {
 
-	public static Texture2D TextureFromColourMap(Color[] colourMap, int width, int height) {
-		Texture2D texture = new Texture2D (width, height);
+	public static Texture2D TextureFromColourMap(terrainTextureData terrainTextureData) {
+		Texture2D texture = new Texture2D (terrainTextureData.width, terrainTextureData.height);
 		texture.filterMode = FilterMode.Point;
 		texture.wrapMode = TextureWrapMode.Clamp;
-		texture.SetPixels (colourMap);
+		texture.SetPixels (terrainTextureData.colourMap);
 		texture.Apply ();
 		return texture;
 	}
 
 
-	public static Texture2D TextureFromHeightMap(float[,] heightMap) {
+	public static terrainTextureData TextureFromHeightMap(float[,] heightMap) {
 		int width = heightMap.GetLength (0);
 		int height = heightMap.GetLength (1);
 
@@ -24,11 +24,12 @@ public static class TextureGenerator {
 			}
 		}
 
-		return TextureFromColourMap (colourMap, width, height);
+		return new terrainTextureData(colourMap, width, height);
+		//return TextureFromColourMap (colourMap, width, height);
 	}
 
 
-	public static Texture2D CreateTextureFromRegionsSettings(float[,] noiseMap, TerrainRegionsType[] regions) {
+	public static terrainTextureData GenerateTextureDataFromRegionsSettings(float[,] noiseMap, TerrainRegionsType[] regions) {
 		int width = noiseMap.GetLength (0);
 		int height = noiseMap.GetLength (1);
 
@@ -44,6 +45,19 @@ public static class TextureGenerator {
 				}
 			}
 		}
-		return TextureFromColourMap (colourMap, width, height);
+		return new terrainTextureData(colourMap, width, height);
 	}
+}
+
+public struct terrainTextureData {
+	public Color[] colourMap;
+	public int width;
+	public int height;
+
+    public terrainTextureData(Color[] colourMap, int width, int height)
+    {
+        this.colourMap = colourMap;
+        this.width = width;
+        this.height = height;
+    }
 }

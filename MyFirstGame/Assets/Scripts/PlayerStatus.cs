@@ -7,16 +7,25 @@ using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 
+
 public class PlayerStatus : MonoBehaviour
 {
     int score = 0;
-    [SerializeField] public float health = 100f;
+    
+    public float health = 0;
+    public int damage = 0;
+    public int speed = 0;
+
+    public Dictionary<string, int> invintory = new Dictionary<string, int>();
+
     [SerializeField] public bool alive = true;
     private float lastPlayerHit = 0f;
 
     public TextMeshProUGUI TimeTextUiElement;
     public TextMeshProUGUI ScoreTextUiElement;
     public TextMeshProUGUI GameOverScoreTextUiElement;
+    
+    public TextMeshProUGUI BlobCountText;
 
     public GameObject GameOverText;
 
@@ -25,6 +34,32 @@ public class PlayerStatus : MonoBehaviour
 
     public GameTimer Timer;
 
+    public void AddItemToInvintory(string name, int amount) {
+        if (invintory.ContainsKey(name)) {
+            invintory[name] += amount;
+        } else{
+            invintory[name] = amount;
+        }
+    }
+    public int GetItemFromInvintory (string name) {
+        return invintory[name];
+    }
+
+    public void RemoveItemFromInvintory (string name, int amount) {
+        if (invintory.ContainsKey(name)) {
+            invintory[name] -= amount;
+        }
+    }
+
+
+     void OnTriggerEnter(Collider other) {
+        if (other.gameObject.transform.parent.gameObject.name == "RedBlobDrop") {
+            AddItemToInvintory("RedBlobDrop", 10);
+            BlobCountText.text = "Blob " + GetItemFromInvintory("RedBlobDrop");
+
+            Destroy(other.gameObject);
+        }
+     }
 
     void Start(){
         Timer = new GameTimer();

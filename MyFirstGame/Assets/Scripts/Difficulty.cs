@@ -10,7 +10,7 @@ using Unity.AI.Navigation;
 
 public class Difficulty : OneInstance
 {
-    public static Difficulty instance {get; set;}
+    public static Difficulty instance { get; set; }
 
     public int DifficultyPoints;
     public GameObject player;
@@ -23,13 +23,16 @@ public class Difficulty : OneInstance
     int MaxDifficultyPointsCanGenerate = 400;
     int MinDifficultyPointsCanGenerate = 300;
 
-     int maxAmountOfGroups = 0;
+    int maxAmountOfGroups = 2;
 
     void Awake()
     {
-        if (instance) {
+        if (instance)
+        {
             Debug.LogWarning("Did you mean to make second instance of type. Type extends OneInstance");
-        } else {
+        }
+        else
+        {
             instance = this;
         }
 
@@ -42,10 +45,11 @@ public class Difficulty : OneInstance
 
     }
 
-    override public void ResetInstance() {
-        OneInstance.AllInstances[this.ToString()] =  new Difficulty();
+    override public void ResetInstance()
+    {
+        OneInstance.AllInstances[this.ToString()] = new Difficulty();
     }
-    
+
 
     public IEnumerator Activate(GameObject player)
     {
@@ -57,7 +61,6 @@ public class Difficulty : OneInstance
             {
                 for (int i = 0; DifficultyPoints >= GroupMinDifficulty; i++)
                 {
-
                     EnemyGroup enemyGroup = new EnemyGroup();
                     enemyGroup.GenerateGroup(player);
 
@@ -79,7 +82,8 @@ public class Difficulty : OneInstance
     }
 
 
-    public void RemoveEnemyGroup(EnemyGroup enemyGroup) {
+    public void RemoveEnemyGroup(EnemyGroup enemyGroup)
+    {
         enemyGroups.Remove(enemyGroup);
     }
 

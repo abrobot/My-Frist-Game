@@ -14,9 +14,6 @@ public class CameraScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
-        Cursor.lockState = CursorLockMode.Confined;
-        Cursor.lockState = CursorLockMode.Locked;
     }
 
     // Update is called once per frame

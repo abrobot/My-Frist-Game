@@ -19,6 +19,10 @@ MonoBehaviour:
   lacunarity: 2
   regions:
   - name: Grass
-    height: 1
+    height: 0.5
     colour: {r: 0.058873262, g: 0.5943396, b: 0.10529983, a: 0}
-  treeGenerationSetting: {fileID: 11400000, guid: 45925a7de28f4184fac1a459a4738136, type: 2}
+  - name: Grass2
+    height: 1
+    colour: {r: 0.11764706, g: 0.59607846, b: 0.10588236, a: 0}
+  treeGenerationSetting: {fileID: 11400000, guid: 45925a7de28f4184fac1a459a4738136,
+    type: 2}

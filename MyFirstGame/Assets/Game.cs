@@ -8,6 +8,8 @@ public class Game : OneInstance
 {
     public static Game instance { get; set; }
 
+    public PlayerUI playerUI;
+
     public static Game GameInstance;
     public static GameObject MainGameObject;
     public static CoroutineHandler coroutineHandler;
@@ -27,13 +29,19 @@ public class Game : OneInstance
 
     void waitForLoop()
     {
+        List<string> finishedOp = new List<string>();
         foreach (string key in runningWaitForOperations.Keys){
             
             waitForOperation val = runningWaitForOperations[key];
             val.current += Time.deltaTime;
             if (val.current >= val.end) {
                 val.callback();
+                finishedOp.Add(key);
             }
+        }
+
+        foreach (string key in finishedOp) {
+            runningWaitForOperations.Remove(key);
         }
     }
 

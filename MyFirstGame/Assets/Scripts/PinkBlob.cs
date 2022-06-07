@@ -4,16 +4,6 @@ using UnityEngine;
 
 public class PinkBlob : Enemy
 {
-    public PinkBlob(int health, int killScoreValue, AudioSource deathSound)
-    {
-        this.health = health;
-        this.deathSound = deathSound;
-        this.killScoreValue = killScoreValue;
-        ;
-
-    }
-
-
 
     public override IEnumerator ActivateBehavior()
     {

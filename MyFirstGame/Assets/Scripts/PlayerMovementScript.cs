@@ -7,7 +7,6 @@ public class PlayerMovementScript : MonoBehaviour
     public PlayerStatus playerStatus;
 
     public CharacterController controller;
-    public float speed = 12f;
 
     public float gravityMultiplier = 1;
 
@@ -43,7 +42,7 @@ public class PlayerMovementScript : MonoBehaviour
             }
 
             Vector3 move = transform.right * x + transform.forward * z;
-            controller.Move(move * speed * Time.deltaTime);
+            controller.Move(move * playerStatus.speed * Time.deltaTime);
 
             if (Input.GetKey(KeyCode.Space) && isGrounded)
             {
@@ -52,7 +51,7 @@ public class PlayerMovementScript : MonoBehaviour
 
             playerGravity.y += gravity * Time.deltaTime;
             controller.Move(playerGravity * Time.deltaTime);
-
+            //gameObject.transform.position.Set(transform.position.x, 0, transform.position.z);
         }
     }
 

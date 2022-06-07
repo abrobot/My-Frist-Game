@@ -32,6 +32,8 @@ using UnityEngine;
 public class GunScript : MonoBehaviour
 {
     public GameObject owner;
+    public PlayerStatus playerStatus;
+
     public Camera ownerCamera;
     [SerializeField] LayerMask layerMask;
     [SerializeField] AudioSource gunshot;
@@ -58,7 +60,7 @@ public class GunScript : MonoBehaviour
             Enemy enemy = raycastHit.transform.GetComponent<Enemy>();
             if (enemy)
             {
-                enemy.takeDamage(10f, owner);
+                enemy.takeDamage(playerStatus.damage, owner);
             }
         }
     }
