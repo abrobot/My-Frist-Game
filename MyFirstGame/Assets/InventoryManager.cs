@@ -18,25 +18,22 @@ public class InventoryManager : MonoBehaviour
 
     public Dictionary<int, inventroySlot> inventroySlots = new Dictionary<int, inventroySlot>();
 
-    // Start is called before the first frame update
+
     void Start()
     {
-        for (int i = 0; i < 24; i++)
+        CreateInventorySlots(24);
+    }
+
+
+    void CreateInventorySlots(int numberOfSlots)
+    {
+        for (int i = 0; i < numberOfSlots; i++)
         {
             GameObject newSlot = Instantiate(slotExample, Vector3.zero, default, slotHolder.transform);
             newSlot.name = i.ToString();
             inventroySlot newInventroySlot = new inventroySlot(i, 0, newSlot);
             inventroySlots.Add(i, newInventroySlot);
             newSlot.SetActive(true);
-            // newInventroySlot.slotButton.onClick.AddListener(() =>
-            // {
-            //     if (mouseDown == true)
-            //     {
-            //         inventroySlotSwaping = newInventroySlot.id;
-            //         Transform from = newInventroySlot.slotUiElement.gameObject.transform.Find("SwapFrom");
-            //         from.gameObject.SetActive(true);
-            //     }
-            // });
         }
     }
 
@@ -49,7 +46,7 @@ public class InventoryManager : MonoBehaviour
         EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
         foreach (RaycastResult value in results)
         {
-            if (value.gameObject.transform.IsChildOf(slotHolder.transform) && value.gameObject.name != "Text" && value.gameObject.name != "SwapFrom" && value.gameObject.name != "SwapTo")
+            if (value.gameObject.transform.IsChildOf(slotHolder.transform) && value.gameObject.name != "Text" && value.gameObject.name != "SwapFrom" && value.gameObject.name != "SwapTo" && value.gameObject.name != "Count")
             {
                 overSlot = true;
                 slotId = int.Parse(value.gameObject.name);
@@ -75,35 +72,44 @@ public class InventoryManager : MonoBehaviour
     }
 
 
-    void SwapSlotItem(inventroySlot from, inventroySlot to) {
-        InventoryItem itemFrom = from.item;
-        int amountFrom = from.amountHolding;
-        
-        InventoryItem itemTo = to.item;
-        int amountTo = to.amountHolding;
+    void SwapSlotItem(inventroySlot from, inventroySlot to)
+    {
 
-        to.item = itemFrom;
-        to.amountHolding = amountFrom;
-        
-        from.item = itemTo;
-        from.amountHolding = amountTo;
+        //print(from.amountHolding);  
+        //print(to.amountHolding);  
 
-        print(from.item);
-        print(to.item);
-        
+        InventoryItem tempItem = from.item;
+        int tempAmount = from.amountHolding;
 
+        print(from.amountHolding);
+        from.item = to.item;
+        from.amountHolding = to.amountHolding;
+        print(from.amountHolding);
+
+        to.item = tempItem;
+        to.amountHolding = tempAmount;
+
+
+        //print(from.amountHolding);  
+        //print(to.amountHolding);  
+
+        // InventoryItem itemFrom = from.item;
+        // int amountFrom = from.amountHolding;
+
+        // InventoryItem itemTo = to.item;
+        // int amountTo = to.amountHolding;
+
+        // to.item = itemFrom;
+        // to.amountHolding = amountFrom;
+
+        // from.item = itemTo;
+        // from.amountHolding = amountTo;
     }
 
-    bool hasdone = false;
-    // Update is called once per frame
-    void Update()
+    void CheckMouseStatus()
     {
-        if (Mathf.RoundToInt(Time.time) == 5 && hasdone == false)
-        {
-            Add(new InventoryItem(new GameObject("RedSlime"), true, "RedSlime"), 10);
-            hasdone = true;
-        }
 
+        // Check if mouse is over slot
         if (Input.GetMouseButton(0))
         {
             bool overSlot;
@@ -126,43 +132,58 @@ public class InventoryManager : MonoBehaviour
             }
         }
 
+        // check if mouse click on slot
         if (Input.GetMouseButtonDown(0))
         {
-            bool overSlot;
-            int slotId;
-            mouseDown = true;
 
-            IsPointerOverInventroySlot(out overSlot, out slotId);
-            if (overSlot)
+            if (slotHoveringOver != null && inventroySlotSwaping == null)
             {
-                inventroySlotSwaping = inventroySlots[slotId];
+                inventroySlotSwaping = slotHoveringOver;
                 GameObject from = inventroySlotSwaping.slotUiElement.transform.Find("SwapFrom").gameObject;
                 from.SetActive(true);
             }
         }
 
-
-        else if (Input.GetMouseButtonUp(0))
+        //check if mouse click end
+        if (Input.GetMouseButtonUp(0))
         {
 
             if (inventroySlotSwaping != null && slotHoveringOver != null)
             {
                 if (inventroySlotSwaping != slotHoveringOver)
                 {
-                    //print(" From " + inventroySlotSwaping.id + " to " + slotHoveringOver.id);
                     SwapSlotItem(inventroySlotSwaping, slotHoveringOver);
                 }
+            }
 
+            if (inventroySlotSwaping != null)
+            {
                 GameObject from = inventroySlotSwaping.slotUiElement.transform.Find("SwapFrom").gameObject;
                 from.SetActive(false);
                 inventroySlotSwaping = null;
+            }
+
+            if (slotHoveringOver != null)
+            {
                 GameObject to = slotHoveringOver.slotUiElement.transform.Find("SwapTo").gameObject;
                 to.SetActive(false);
                 slotHoveringOver = null;
             }
         }
+    }
 
 
+    bool hasdone = false;
+    // Update is called once per frame
+    void Update()
+    {
+        if (Mathf.RoundToInt(Time.time) == 5 && hasdone == false)
+        {
+            Add(new InventoryItem(new GameObject("RedSlime"), true, "RedSlime"), 10);
+            hasdone = true;
+        }
+
+        CheckMouseStatus();
     }
 }
 
@@ -170,8 +191,24 @@ public class InventoryManager : MonoBehaviour
 public class inventroySlot
 {
     public int id;
-    public int amountHolding = 0;
+    int _amountHolding = 0;
     InventoryItem _item;
+
+    public GameObject slotUiElement;
+    public Button slotButton;
+    public GameObject countElement;
+
+    public bool hasItem = false;
+
+    public inventroySlot(int id, int amountHolding, GameObject slotUiElement)
+    {
+        this.id = id;
+        this.countElement = slotUiElement.transform.Find("Count").gameObject;
+        this.amountHolding = amountHolding;
+        this.slotUiElement = slotUiElement;
+        this.slotButton = slotUiElement.GetComponent<Button>();
+    }
+
     public InventoryItem item
     {
         get { return _item; }
@@ -180,10 +217,12 @@ public class inventroySlot
             TextMeshProUGUI text = this.slotUiElement.transform.Find("Text").GetComponent<TextMeshProUGUI>();
             if (text)
             {
-                Debug.Log(value);
-                if (value != null){
-                text.text = value.name;
-                } else {
+                if (value != null)
+                {
+                    text.text = value.name;
+                }
+                else
+                {
                     text.text = "button";
                 }
             }
@@ -191,16 +230,23 @@ public class inventroySlot
         }
     }
 
-    public GameObject slotUiElement;
-    public Button slotButton;
-    public bool hasItem = false;
-
-    public inventroySlot(int id, int amountHolding, GameObject slotUiElement)
+    public int amountHolding
     {
-        this.id = id;
-        this.amountHolding = amountHolding;
-        this.slotUiElement = slotUiElement;
-        this.slotButton = slotUiElement.GetComponent<Button>();
+        get { return _amountHolding; }
+        set
+        {
+            //Debug.Log(value);
+            if (value != 0 && value > 1)
+            {
+                this.countElement.transform.Find("Text").GetComponent<TextMeshProUGUI>().text = value.ToString();
+                this.countElement.SetActive(true);
+            }
+            else
+            {
+                this.countElement.SetActive(false);
+            }
+            _amountHolding = value;
+        }
     }
 }
 
