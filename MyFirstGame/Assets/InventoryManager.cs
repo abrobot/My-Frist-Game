@@ -8,6 +8,7 @@ using UnityEngine.EventSystems;
 
 public class InventoryManager : MonoBehaviour
 {
+    public ViewWithMouse inventoryView;
     public GameObject inventroyUIelement;
     public GameObject slotHolder;
     public GameObject slotExample;
@@ -16,11 +17,19 @@ public class InventoryManager : MonoBehaviour
     public inventroySlot inventroySlotSwaping;
     public inventroySlot slotHoveringOver;
 
+    public InventoryItemSO RedBlobDropSO;
+
     public Dictionary<int, inventroySlot> inventroySlots = new Dictionary<int, inventroySlot>();
 
+    Dictionary<string, InventoryItemSO> gameitems;
 
     void Start()
     {
+        gameitems = new Dictionary<string, InventoryItemSO>();
+        foreach (InventoryItemSO item in GetPrefabsFromFolder.GetInventroySO("InventoryItemSOs"))
+        {
+            gameitems.Add(item.name, item);
+        }
         CreateInventorySlots(24);
     }
 
@@ -46,7 +55,7 @@ public class InventoryManager : MonoBehaviour
         EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
         foreach (RaycastResult value in results)
         {
-            if (value.gameObject.transform.IsChildOf(slotHolder.transform) && value.gameObject.name != "Text" && value.gameObject.name != "SwapFrom" && value.gameObject.name != "SwapTo" && value.gameObject.name != "Count")
+            if (value.gameObject.transform.IsChildOf(slotHolder.transform) && value.gameObject.name != "Text" && value.gameObject.name != "SwapFrom" && value.gameObject.name != "SwapTo" && value.gameObject.name != "Count" && value.gameObject.name != "ItemSprite")
             {
                 overSlot = true;
                 slotId = int.Parse(value.gameObject.name);
@@ -57,53 +66,95 @@ public class InventoryManager : MonoBehaviour
         slotId = 0;
     }
 
-    void Add(InventoryItem item, int amount)
+    public void Add(InventoryItemSO item, int amount)
     {
+        inventroySlot firstAvailableSlot = null;
         for (int i = 0; i < inventroySlots.Count; i++)
         {
             inventroySlot currentSlot = inventroySlots[i];
-            if (!currentSlot.hasItem)
+            if (currentSlot.hasItem)
             {
-                currentSlot.item = item;
-                currentSlot.amountHolding = amount;
-                return;
+                if (currentSlot.item == item)
+                {
+                    currentSlot.amountHolding += amount;
+                    return;
+                }
+            }
+            else
+            {
+                if (firstAvailableSlot == null)
+                {
+                    firstAvailableSlot = currentSlot;
+                }
             }
         }
+        firstAvailableSlot.item = item;
+        firstAvailableSlot.amountHolding = amount;
     }
 
+    public bool Remove(InventoryItemSO item, int amount)
+    {
+        for (int i = 0; i < inventroySlots.Count; i++)
+        {
 
+            inventroySlot currentSlot = inventroySlots[i];
+
+            if (currentSlot.item == item)
+            {
+                if (currentSlot.amountHolding >= amount)
+                {
+                    currentSlot.amountHolding -= amount;
+                    if (currentSlot.amountHolding <= 0)
+                    {
+                        currentSlot.Reset();
+                    }
+                    return true;
+                }
+
+            }
+        }
+        return false;
+    }
+
+    public bool removeFullListWithCheck(UpgradeCost[] values)
+    {
+        foreach (UpgradeCost cost in values)
+        {
+            bool foundItem = false;
+            foreach (inventroySlot currentSlot in inventroySlots.Values)
+            {
+                foundItem = false;
+                if (currentSlot.item == cost.item)
+                {
+                    if (currentSlot.amountHolding >= cost.amount)
+                    {
+                        foundItem = true;
+                        break;
+                    }
+                }
+            }
+            if (!foundItem)
+            {
+                return false;
+            }
+        }
+
+        foreach (UpgradeCost cost in values)
+        {
+            Remove(cost.item, cost.amount);
+        }
+        return true;
+    }
     void SwapSlotItem(inventroySlot from, inventroySlot to)
     {
-
-        //print(from.amountHolding);  
-        //print(to.amountHolding);  
-
-        InventoryItem tempItem = from.item;
+        InventoryItemSO tempItem = from.item;
         int tempAmount = from.amountHolding;
 
-        print(from.amountHolding);
         from.item = to.item;
         from.amountHolding = to.amountHolding;
-        print(from.amountHolding);
 
         to.item = tempItem;
         to.amountHolding = tempAmount;
-
-
-        //print(from.amountHolding);  
-        //print(to.amountHolding);  
-
-        // InventoryItem itemFrom = from.item;
-        // int amountFrom = from.amountHolding;
-
-        // InventoryItem itemTo = to.item;
-        // int amountTo = to.amountHolding;
-
-        // to.item = itemFrom;
-        // to.amountHolding = amountFrom;
-
-        // from.item = itemTo;
-        // from.amountHolding = amountTo;
     }
 
     void CheckMouseStatus()
@@ -173,17 +224,25 @@ public class InventoryManager : MonoBehaviour
     }
 
 
-    bool hasdone = false;
+    // bool hasdone = false;
     // Update is called once per frame
     void Update()
     {
-        if (Mathf.RoundToInt(Time.time) == 5 && hasdone == false)
+        // if (Mathf.RoundToInt(Time.time) == 5 && hasdone == false)
+        // {
+        //     Add(RedBlobDropSO, 1000);
+        //     hasdone = true;
+        // }
+        if (inventoryView.isOpen)
         {
-            Add(new InventoryItem(new GameObject("RedSlime"), true, "RedSlime"), 10);
-            hasdone = true;
+            CheckMouseStatus();
         }
+    }
 
-        CheckMouseStatus();
+
+    public InventoryItemSO translateNameToInventoryItem(string name)
+    {
+        return gameitems[name];
     }
 }
 
@@ -192,13 +251,19 @@ public class inventroySlot
 {
     public int id;
     int _amountHolding = 0;
-    InventoryItem _item;
+    InventoryItemSO _item;
 
     public GameObject slotUiElement;
     public Button slotButton;
     public GameObject countElement;
 
     public bool hasItem = false;
+
+    public void Reset()
+    {
+        item = null;
+    }
+
 
     public inventroySlot(int id, int amountHolding, GameObject slotUiElement)
     {
@@ -209,21 +274,30 @@ public class inventroySlot
         this.slotButton = slotUiElement.GetComponent<Button>();
     }
 
-    public InventoryItem item
+    public InventoryItemSO item
     {
         get { return _item; }
         set
         {
             TextMeshProUGUI text = this.slotUiElement.transform.Find("Text").GetComponent<TextMeshProUGUI>();
+            Image itemSprite = this.slotUiElement.transform.Find("ItemSprite").GetComponent<Image>();
+
             if (text)
             {
                 if (value != null)
                 {
-                    text.text = value.name;
+                    text.text = value.itemName;
+                    itemSprite.sprite = value.sprite;
+                    itemSprite.gameObject.SetActive(true);
+                    hasItem = true;
                 }
                 else
                 {
-                    text.text = "button";
+                    itemSprite.sprite = null;
+                    itemSprite.gameObject.SetActive(false);
+                    text.text = "Button";
+                    amountHolding = 0;
+                    hasItem = false;
                 }
             }
             _item = value;
@@ -235,7 +309,6 @@ public class inventroySlot
         get { return _amountHolding; }
         set
         {
-            //Debug.Log(value);
             if (value != 0 && value > 1)
             {
                 this.countElement.transform.Find("Text").GetComponent<TextMeshProUGUI>().text = value.ToString();
@@ -250,17 +323,16 @@ public class inventroySlot
     }
 }
 
+// public class InventoryItem
+// {
+//     public GameObject model;
+//     public bool stackable;
+//     public string name;
 
-public class InventoryItem
-{
-    public GameObject model;
-    public bool stackable;
-    public string name;
-
-    public InventoryItem(GameObject model, bool stackable, string name)
-    {
-        this.model = model;
-        this.stackable = stackable;
-        this.name = name;
-    }
-}
+//     public InventoryItem(GameObject model, bool stackable, string name)
+//     {
+//         this.model = model;
+//         this.stackable = stackable;
+//         this.name = name;
+//     }
+// }

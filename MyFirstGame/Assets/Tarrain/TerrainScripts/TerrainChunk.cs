@@ -14,7 +14,11 @@ public partial class TerrainChunk
     public static Queue<DataForTerrainChunkCalculations> dataForTerrainChunkCalculationsQueue = new Queue<DataForTerrainChunkCalculations>();
     public static Queue<TerrainChunkGenerationData> terrainChunkGenerationDataQueue = new Queue<TerrainChunkGenerationData>();
 
-
+    static public void ResetStaticVar() {
+        terrainThreadRunning = false;
+        dataForTerrainChunkCalculationsQueue = new Queue<DataForTerrainChunkCalculations>();
+        terrainChunkGenerationDataQueue = new Queue<TerrainChunkGenerationData>();
+    }
 
 
     Material material;
