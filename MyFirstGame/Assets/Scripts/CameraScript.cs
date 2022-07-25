@@ -5,28 +5,26 @@ using UnityEngine;
 public class CameraScript : MonoBehaviour
 {
 
+
     public float mouseSesitivity = 100f;
     float xRotation = 0f;
     public Transform playerBody;
-    
-    
+    public bool freeze = false;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
 
-    // Update is called once per frame
     void Update()
     {
-        float mouseX = Input.GetAxis("Mouse X") * mouseSesitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSesitivity * Time.deltaTime;
+        if (!freeze)
+        {
+            float mouseX = Input.GetAxis("Mouse X") * mouseSesitivity * Time.deltaTime;
+            float mouseY = Input.GetAxis("Mouse Y") * mouseSesitivity * Time.deltaTime;
 
 
-        xRotation -= mouseY;
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
-        transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
-        playerBody.Rotate(Vector3.up * mouseX);
+            xRotation -= mouseY;
+            xRotation = Mathf.Clamp(xRotation, -90f, 90f);
+            transform.localRotation = Quaternion.Euler(xRotation, 0f, 0f);
+            playerBody.Rotate(Vector3.up * mouseX);
+        }
 
     }
 }
