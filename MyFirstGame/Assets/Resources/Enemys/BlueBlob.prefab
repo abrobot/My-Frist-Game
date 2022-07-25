@@ -206,7 +206,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.55
-  m_Speed: 5
+  m_Speed: 7.5
   m_Acceleration: 10
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -249,7 +249,7 @@ MonoBehaviour:
   enemyPrefab: {fileID: 5619527079697808232}
   navMeshAgent: {fileID: 259520778}
   rigidBody: {fileID: 4994044271230478395}
-  Drop: {fileID: 4988158300228763238, guid: c1ad1d608ffab3840a835ab08098b251, type: 3}
+  Drop: {fileID: 11400000, guid: cd5ec7139f4945b47b8869ea0fc61e02, type: 2}
   behaviorActive: 0
   alive: 1
   killScoreValue: 20

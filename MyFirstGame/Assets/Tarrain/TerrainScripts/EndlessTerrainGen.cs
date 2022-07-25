@@ -10,7 +10,7 @@ using System.Threading;
 public class EndlessTerrainGen : MonoBehaviour
 {
 
-    public static Dictionary<Vector2, TerrainChunk> terrainChunks = new Dictionary<Vector2, TerrainChunk>();
+    public Dictionary<Vector2, TerrainChunk> terrainChunks = new Dictionary<Vector2, TerrainChunk>();
     GameObject terrainStorageGameObject;
     GameObject terrainChunkStorageGameObject;
     GameObject treesStorageGameobject;

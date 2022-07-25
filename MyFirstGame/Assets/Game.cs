@@ -112,10 +112,14 @@ public class Game : OneInstance
 
     public void Restart()
     {
-        WaitFor("Time", 10, () => {
+        WaitFor("Time", 3, () => {
             OneInstance.resetAllInstances();
             Enemy.navMeshData = null;
-            SceneManager.LoadScene("Scenes/"+SceneManager.GetActiveScene().name);   
+            playerUI.firstPerson = false;
+            TerrainChunk.ResetStaticVar();
+            SceneManager.LoadScene("Scenes/MenuScene"); 
+            //SceneManager.SetActiveScene(SceneManager.GetSceneByName("MenuScene"));
+            //SceneManager.UnloadSceneAsync("Scenes/SampleScene"); 
         });
     }
 }

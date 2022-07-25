@@ -21,7 +21,7 @@ public abstract class Enemy : MonoBehaviour
     public NavMeshAgent navMeshAgent;
 
     public Rigidbody rigidBody;
-    public GameObject Drop;
+    public InventoryItemSO Drop;
 
 
     public bool behaviorActive = false;
@@ -87,7 +87,7 @@ public abstract class Enemy : MonoBehaviour
             {
                 StopCoroutine(behaviorCoroutine);
             }
-            Object.Instantiate(Drop, gameObject.transform.position, gameObject.transform.rotation).name = "RedBlobDrop";
+            Object.Instantiate(Drop.model, gameObject.transform.position, gameObject.transform.rotation).name = Drop.name;
             alive = false;
             Player.GetComponent<PlayerStatus>().AddScore(killScoreValue);
             deathSound.Play();
