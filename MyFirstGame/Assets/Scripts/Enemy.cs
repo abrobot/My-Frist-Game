@@ -7,6 +7,7 @@ using Unity.AI.Navigation;
 using UnityEditor;
 using UnityEngine.UI;
 
+
 public abstract class Enemy : MonoBehaviour
 {
     [SerializeField] public GameObject enemyPrefab;

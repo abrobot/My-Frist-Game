@@ -6,7 +6,7 @@ public class EvolutionHandler : MonoBehaviour
 {
     public PlayerStatus playerStatus;
 
-    List<evolutionLevel> evolutionLevels = new List<evolutionLevel> { new evolutionLevel(10, 60, 20, new EvolveCost[] {}), new evolutionLevel(15, 100, 30, new EvolveCost[] {new EvolveCost("RedBlobDrop", 10)}) , new evolutionLevel(30, 1000, 100, new EvolveCost[] {new EvolveCost("RedBlobDrop", 10)})};
+    List<evolutionLevel> evolutionLevels = new List<evolutionLevel> { new evolutionLevel(10, 30, 20, new EvolveCost[] {}), new evolutionLevel(15, 100, 30, new EvolveCost[] {new EvolveCost("RedBlobDrop", 10)}) , new evolutionLevel(30, 1000, 100, new EvolveCost[] {new EvolveCost("RedBlobDrop", 10)})};
     int currentIndex = 0;
 
     // Start is called before the first frame update
