@@ -47,6 +47,36 @@ public static class TextureGenerator {
 		}
 		return new terrainTextureData(colourMap, width, height);
 	}
+
+	
+
+	public static terrainTextureData GenerateTextureDataFromRegionsSettings(float[,] noiseMap, float[,] biomeMap, TerrainRegionsType[][] regions) {
+		int width = noiseMap.GetLength (0);
+		int height = noiseMap.GetLength (1);
+
+		Color[] colourMap = new Color[width * height];
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				float currentHeight = noiseMap [x, y];
+				TerrainRegionsType[] regionsForBiome; 
+
+				if (biomeMap[x, y] == 1) {
+					regionsForBiome = regions[0];
+				} else {
+					regionsForBiome = regions[1];
+				}
+
+				for (int i = 0; i < regionsForBiome.Length; i++) {
+					if (currentHeight <= regionsForBiome [i].height) {
+						colourMap [y * width + x] = regionsForBiome [i].colour;
+						break;
+					}
+				}
+			}
+		}
+		return new terrainTextureData(colourMap, width, height);
+	}
+
 }
 
 public struct terrainTextureData {

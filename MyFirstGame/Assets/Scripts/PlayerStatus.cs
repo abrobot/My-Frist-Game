@@ -78,6 +78,7 @@ public class PlayerStatus : MonoBehaviour
         Timer.StartTimer();
 
         healthBarSlider = healthBar.GetComponent<Slider>();
+        healthBarSlider.maxValue = maxhealth;
 
     }
 

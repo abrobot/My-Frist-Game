@@ -112,7 +112,7 @@ public class Game : OneInstance
 
     public void Restart()
     {
-        WaitFor("Time", 3, () => {
+        WaitFor("Time", 5, () => {
             OneInstance.resetAllInstances();
             Enemy.navMeshData = null;
             playerUI.firstPerson = false;

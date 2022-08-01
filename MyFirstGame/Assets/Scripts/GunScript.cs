@@ -37,7 +37,18 @@ public class GunScript : MonoBehaviour
     public Camera ownerCamera;
     [SerializeField] LayerMask layerMask;
     [SerializeField] AudioSource gunshot;
+    public int damage;
 
+    public GameObject bullet;
+    BulletInfo bulletInfo;
+
+    List<GameObject> bullets = new List<GameObject>();
+
+
+    void Start()
+    {
+        bulletInfo = new BulletInfo(default, 50, damage, owner, 3);
+    }
 
     void Update()
     {
@@ -51,17 +62,12 @@ public class GunScript : MonoBehaviour
 
     void Shoot()
     {
-        Ray ray = ownerCamera.ScreenPointToRay(Input.mousePosition);
-        gunshot.pitch = Random.Range(0.95f, 1.05f);
+        GameObject newBulletObject = Instantiate(bullet, owner.transform.position + (owner.transform.forward * 1), default);
+        Bullet NewBullet = newBulletObject.GetComponent<Bullet>();
+        NewBullet.bulletInfo = new BulletInfo(bulletInfo, ownerCamera.transform.forward);
+
+        gunshot.pitch = Random.Range(0.8f, 1f);
+        gunshot.time = 2.5f;
         gunshot.Play();
-        
-        if (Physics.Raycast(ray, out RaycastHit raycastHit, 1000f, ~layerMask))
-        {
-            Enemy enemy = raycastHit.transform.GetComponent<Enemy>();
-            if (enemy)
-            {
-                enemy.takeDamage(playerStatus.damage, owner);
-            }
-        }
     }
 }

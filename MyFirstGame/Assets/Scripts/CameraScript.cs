@@ -11,14 +11,17 @@ public class CameraScript : MonoBehaviour
     public Transform playerBody;
     public bool freeze = false;
 
+    public float acceleration = 1.05f;
+    float currentAcceleration = .5f;
+    float LastValidUpdate = 0;
+
 
     void Update()
     {
         if (!freeze)
         {
-            float mouseX = Input.GetAxis("Mouse X") * mouseSesitivity * Time.deltaTime;
-            float mouseY = Input.GetAxis("Mouse Y") * mouseSesitivity * Time.deltaTime;
-
+            float mouseX = Input.GetAxis("Mouse X") * mouseSesitivity * acceleration;// * currentAcceleration;
+            float mouseY = Input.GetAxis("Mouse Y") * mouseSesitivity * acceleration;// * currentAcceleration;
 
             xRotation -= mouseY;
             xRotation = Mathf.Clamp(xRotation, -90f, 90f);
