@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 639500787502579908}
   - component: {fileID: 3932809467854086911}
   - component: {fileID: 1043382271459007119}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -60,7 +60,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 104e49bb37828e8489a923af7da37f95, type: 2}
+  - {fileID: 2100000, guid: a1386cb55fb0935488af09800fb5ab02, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -108,7 +108,7 @@ GameObject:
   - component: {fileID: 2934790782014281137}
   - component: {fileID: -5605075736651208222}
   - component: {fileID: 6904034083805901124}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -143,6 +143,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletGameObject: {fileID: 1076149972453700792}
+  playerCamera: {fileID: 0}
   bulletRigidbody: {fileID: 6904034083805901124}
 --- !u!198 &2934790782014281137
 ParticleSystem:
@@ -4928,7 +4929,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 104e49bb37828e8489a923af7da37f95, type: 2}
+  - {fileID: 2100000, guid: a1386cb55fb0935488af09800fb5ab02, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

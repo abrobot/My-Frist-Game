@@ -17,10 +17,11 @@ public class PlayerStatus : MonoBehaviour
     public int damage = 0;
     public int speed = 0;
 
-    public Dictionary<string, int> invintory = new Dictionary<string, int>();
-
-    [SerializeField] public bool alive = true;
+    public bool alive = true;
+    public MoveDirection moveDirection;
     private float lastPlayerHit = 0f;
+
+    public Dictionary<string, int> invintory = new Dictionary<string, int>();
 
     public TextMeshProUGUI TimeTextUiElement;
     public TextMeshProUGUI ScoreTextUiElement;
@@ -34,6 +35,7 @@ public class PlayerStatus : MonoBehaviour
 
     public GameObject healthBar;
     [NonSerialized] public Slider healthBarSlider;
+    public CharacterController characterController;
 
     public GameTimer Timer;
 

@@ -32,6 +32,7 @@ using UnityEngine;
 public class GunScript : MonoBehaviour
 {
     public GameObject owner;
+    public Camera playerCamera;
     public PlayerStatus playerStatus;
 
     public Camera ownerCamera;
@@ -47,7 +48,7 @@ public class GunScript : MonoBehaviour
 
     void Start()
     {
-        bulletInfo = new BulletInfo(default, 50, damage, owner, 3);
+        bulletInfo = new BulletInfo(default, 15, damage, owner, 3, playerStatus);
     }
 
     void Update()
@@ -65,6 +66,7 @@ public class GunScript : MonoBehaviour
         GameObject newBulletObject = Instantiate(bullet, owner.transform.position + (owner.transform.forward * 1), default);
         Bullet NewBullet = newBulletObject.GetComponent<Bullet>();
         NewBullet.bulletInfo = new BulletInfo(bulletInfo, ownerCamera.transform.forward);
+        NewBullet.playerCamera = playerCamera;
 
         gunshot.pitch = Random.Range(0.8f, 1f);
         gunshot.time = 2.5f;

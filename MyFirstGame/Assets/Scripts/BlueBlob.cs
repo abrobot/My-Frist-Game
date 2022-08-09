@@ -11,7 +11,7 @@ public class BlueBlob : Enemy
         behaviorActive = true;
 
         //float lastJumpTime = Time.time;
-        float nextJumpTime = Random.Range(5, 6);
+        float nextJumpTime = Random.Range(4, 8);
 
 
         bool midJump = false;
@@ -28,7 +28,7 @@ public class BlueBlob : Enemy
             if (Time.time >= stopLungeAtTime && midJump)
             {
                 navMeshAgent.enabled = true;
-                nextJumpTime = Random.Range(5, 6);
+                nextJumpTime = Random.Range(4, 8);
                 midJump = false;
             }
 

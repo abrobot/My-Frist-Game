@@ -861,6 +861,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   owner: {fileID: 2122739698}
+  playerCamera: {fileID: 1397327174}
   playerStatus: {fileID: 2122739702}
   ownerCamera: {fileID: 1397327174}
   layerMask:
@@ -3833,7 +3834,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 5b30025046f47fe419dbb0aabbf5c030, type: 2}
+  - {fileID: 2100000, guid: a1386cb55fb0935488af09800fb5ab02, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4136,6 +4137,7 @@ GameObject:
   - component: {fileID: 1397327174}
   - component: {fileID: 1397327173}
   - component: {fileID: 1397327172}
+  - component: {fileID: 1397327175}
   m_Layer: 10
   m_Name: Camera
   m_TagString: Untagged
@@ -4224,6 +4226,39 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &1397327175
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1397327170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_VolumeFrameworkUpdateModeOption: 2
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_AllowXRRendering: 1
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_Version: 2
 --- !u!1 &1482883121
 GameObject:
   m_ObjectHideFlags: 0
@@ -4455,7 +4490,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1598068529}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 02e92742128b281468b882f0bbb2ca26, type: 3}
   m_Name: 
@@ -6897,12 +6932,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerStatus: {fileID: 2122739702}
   controller: {fileID: 2122739699}
-  gravityMultiplier: 4
   groundCheck: {fileID: 1638466402}
   layerMask:
     serializedVersion: 2
     m_Bits: 6656
+  gravityMultiplier: 4
   jumpHight: 2
+  moveDirection: 0
 --- !u!114 &2122739702
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6921,6 +6957,7 @@ MonoBehaviour:
   damage: 10
   speed: 25
   alive: 1
+  moveDirection: 0
   TimeTextUiElement: {fileID: 1653706294}
   ScoreTextUiElement: {fileID: 1043356953}
   GameOverScoreTextUiElement: {fileID: 909077760}
@@ -6928,6 +6965,7 @@ MonoBehaviour:
   inventoryManager: {fileID: 2122739708}
   GameOverText: {fileID: 810503731}
   healthBar: {fileID: 1716550436}
+  characterController: {fileID: 2122739699}
 --- !u!114 &2122739703
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6935,12 +6973,12 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2122739698}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e7bf3c9efb9c67c48b2bb447813cd0fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DefaultMaterial: {fileID: 0}
+  DefaultMaterial: {fileID: 2100000, guid: cd6f9cb9983de154bbd8d982006d05ce, type: 2}
   terrainOriginPosition: {x: 0, y: 0, z: 0}
   viewer: {fileID: 2122739698}
   viewDistance: 160
